@@ -15,6 +15,28 @@ $(document).ready(function() {
     });
   });
 
+  $("#new-todo-form").submit(function(event) {
+    event.preventDefault();
+    var data = $(this).serialize();
+    $("#new-todo-form").trigger("reset");
+    $.ajax({
+      method: "POST",
+      url: '/ajax/add/',
+      data: data,
+      success: handleTodoAddResponse()
+    })
+  });
+
+  $(document).on('click', '.complete-btn', function() {
+    var id = $(this).data('itemid');
+    $.ajax({
+      // add code here
+      method: "POST",
+      url: '/ajax/complete/'+id,
+      success: handleTodosCompleteResponse(id)
+    });
+  });
+
   $(document).on('click', '.edit-btn', function() {
     var id = $(this).data("itemid")
     // hide the static item, show the input field
@@ -25,7 +47,7 @@ $(document).ready(function() {
     $('.edit-'+id).hide()
     $('.save-'+id).show()
 
-  })
+  });
 
   $(document).on('click', '.save-btn', function() {
     var id = $(this).data("itemid")
@@ -37,7 +59,7 @@ $(document).ready(function() {
       data: {item: updatedItem},
       success: handleTodosUpdateResponse(id, updatedItem)
     })
-  })
+  });
 
 });
 
@@ -50,23 +72,35 @@ function getAllTodos() {
   }).done(function(data) {
     for( let i=0; i<data.todos.length; i++){
       let itemId = data.todos[i].id
-      $('.list-group').append('<tr class="list-group-item listitem-'+itemId+'">'
-        +'<td>'
-          +'<button class="btn btn-primary edit-btn edit-'+itemId+'" data-itemid="'+itemId+'">Edit</button>'
-          +'<button class="btn btn-success save-btn save-'+itemId+'" data-itemid="'+itemId+'">Save</button>'
-        +'</td>'
-        +'<td>'
-          +'<span class="item-'+itemId+' item">&nbsp;'+data.todos[i].item+'</span>'
-          +'<span class="form-inline edit-form input-'+itemId+'">&nbsp;<input class="form-control" value="'+data.todos[i].item+'"/></span>'
-        +'</td>'
-        +'<td>'
-          +'<button class="btn btn-danger delete-btn pull-right" data-itemid="'+itemId+'">Delete</button>'
-        +'</td>'
-      +'</tr>') }
+      $('.list-group').append('<div style="background-color: ghostwhite;" class="list-group-item listitem-'+itemId+'">'
+      +'<td>'
+      +'<button class="btn btn-primary edit-btn edit-'+itemId+'" data-itemid="'+itemId+'">Edit</button>'
+      +'<button class="btn btn-success save-btn save-'+itemId+'" data-itemid="'+itemId+'" style="display: none;">Save</button>'
+      +'</td>'
+      +'<td>'
+      +'<span class="item-'+itemId+' item">&nbsp;'+data.todos[i].item+'</span>'
+      +'<span class="form-inline edit-form input-'+itemId+'" style="display: none;">&nbsp;<input class="form-control" value="'+data.todos[i].item+'"/></span>'
+      +'</td>'
+      +'<td>'
+      +'<button class="btn btn-danger complete-btn pull-right" data-itemid="'+itemId+'">Complete</button>'
+      +'</td>'
+      +'<td>'
+      +'<button class="btn btn-danger delete-btn pull-right" data-itemid="'+itemId+'">Delete</button>'
+      +'</td>'
+      +'</div>') }
   });
 };
 
+function handleTodoAddResponse(data) {
+  getAllTodos();
+}
+
 function handleTodosDeleteResponse(itemId) {
+  var $row = $('.listitem-' + itemId);
+  $row.remove();
+}
+
+function handleTodosCompleteResponse(itemId) {
   var $row = $('.listitem-' + itemId);
   $row.remove();
 }
