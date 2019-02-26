@@ -1,7 +1,10 @@
-# practice-phase-ajax-instruction
-Starter repo for instruction on 1-10-17 practice phase instruction
+# ajax-and-non-ajax-todo
 
 # Instructions
+## Requirements
+- Postgres installed and running
+- Node installed
+
 ## Set up:
 1. fork and clone this repo
 1. $`npm i`
