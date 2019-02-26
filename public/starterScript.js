@@ -8,7 +8,6 @@ $(document).ready(function() {
   $(document).on('click', '.delete-btn', function() {
     var id = $(this).data('itemid');
     $.ajax({
-      // add code here
       method: "POST",
       url: '/ajax/delete/'+id,
       success: handleTodosDeleteResponse(id)
@@ -30,7 +29,6 @@ $(document).ready(function() {
   $(document).on('click', '.complete-btn', function() {
     var id = $(this).data('itemid');
     $.ajax({
-      // add code here
       method: "POST",
       url: '/ajax/complete/'+id,
       success: handleTodosCompleteResponse(id)
@@ -54,7 +52,6 @@ $(document).ready(function() {
     var updatedItem = $('.input-'+id+' input').val()
 
     $.ajax({
-      // add your code here
       method: 'PUT',
       url: '/ajax/update/'+id,
       data: {item: updatedItem},
@@ -67,7 +64,6 @@ $(document).ready(function() {
 function getAllTodos() {
   $('.list-group').html('')
   $.ajax({
-    // add your code here
     method: 'GET',
     url: '/ajax/get-all'
   }).done(function(data) {
